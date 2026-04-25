@@ -3,7 +3,7 @@ import requests
 
 st.set_page_config(page_title="App Motorista - VUC", page_icon="🚚")
 
-DB_URL = "https://api.jsonbin.io/v3/b/69ece496856a68218970575d"
+DB_URL = "https://api.jsonbin.io/v3/b/69ed0a51856a68218970e577"
 # Adicionei o Content-Type para permitir que você salve a confirmação
 HEADERS = {
     "X-Master-Key": "$2a$10$MUfpq2SfAKHcsLfMGJAigO.ieesITCNCewVMEfvXJf7B.S3a0ivaC",
