@@ -23,7 +23,7 @@ st.title("📊 Monitoramento de Frota - Iveco VUC")
 
 # URL do seu banco de dados (o mesmo do app.py)
 DB_URL = "https://api.jsonbin.io/v3/b/69ece496856a68218970575d"
-HEADERS = {"X-Master-Key": "$2b$10$f06u9Lp29R09/X.Y8K8R0.H9U3j8G7j6K5L4M3N2O1P0Q9R8S7T6"}
+HEADERS = {"X-Master-Key": "$2a$10$MUfpq2SfAKHcSLfMGJAigO.ieesITCNCewVMEfvXJf7B.S3a0ivaC"}
 
 def buscar_dados():
     response = requests.get(DB_URL, headers=HEADERS)
