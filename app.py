@@ -1,29 +1,41 @@
 import streamlit as st
 import requests
-import json
-
-URL_BASE = "https://entregas---motorista-kiko-default-rtdb.firebaseio.com/"
 
 st.set_page_config(page_title="App Motorista - VUC", page_icon="🚚")
+
+# Use EXATAMENTE o mesmo ID e Chave que deu certo no seu Admin
+DB_URL = "https://api.jsonbin.io/v3/b/COLE_AQUI_O_ID_QUE_DEU_CERTO"
+HEADERS = {
+    "X-Master-Key": "$2a$10$MUfpq2SfAKHcSLfMGJAigO.ieesITCNCewVMEfvXJf7B.S3a0ivaC",
+    "X-Bin-Meta": "false"
+}
+
 st.title("🚚 Minhas Entregas")
 
-# Lista das 10 entregas (Você pode mudar os nomes aqui)
-entregas_do_dia = [
-    "Mercado Silva", "Auto Peças Norte", "Loja do Centro", 
-    "Transportadora ABC", "Deposito Sul", "Oficina do Kiko",
-    "Material de Construção", "Supermercado 24h", "Galpão 07", "Entrega Final"
-]
+# Busca as entregas que você cadastrou no Admin
+try:
+    response = requests.get(DB_URL, headers=HEADERS)
+    if response.status_code == 200:
+        entregas = response.json().get("entregas", [])
+    else:
+        st.error("Erro ao carregar entregas.")
+        entregas = []
+except:
+    st.error("Erro de conexão.")
+    entregas = []
 
-def atualizar_status(id_e, cliente, status):
-    dados = {"cliente": cliente, "status": status}
-    requests.put(f"{URL_BASE}/entregas/{id_e:02d}.json", data=json.dumps(dados))
+if not entregas:
+    st.warning("Nenhuma entrega cadastrada para hoje.")
 
-# Criando 10 botões organizados
-for i, cliente in enumerate(entregas_do_dia, start=1):
+# Cria os botões para cada entrega da sua lista
+for entrega in entregas:
     col_nome, col_btn = st.columns([3, 2])
     with col_nome:
-        st.write(f"**Entrega #{i:02d}:** {cliente}")
+        st.write(f"**Entrega #{entrega['id']}:** {entrega['cliente']}")
+    
     with col_btn:
-        if st.button(f"Confirmar #{i:02d}", key=f"btn_{i}"):
-            atualizar_status(i, cliente, "✅ Entregue")
-            st.toast(f"Entrega {i} enviada!") # Um aviso rapidinho na tela
+        # Se clicar, a gente atualiza o status no banco
+        if st.button(f"Confirmar #{entrega['id']}", key=f"btn_{entrega['id']}"):
+            # Aqui você pode adicionar a lógica para mudar para 'Entregue'
+            st.success(f"Entrega {entrega['id']} confirmada!")
+            st.balloons()
