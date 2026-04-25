@@ -4,7 +4,10 @@ import requests
 st.set_page_config(page_title="Cadastro de Entregas", layout="centered")
 
 DB_URL = "https://api.jsonbin.io/v3/b/67bdc657ad19ca34f8115598"
-HEADERS = {"X-Master-Key": "$2b$10$f06u9Lp29R09/X.Y8K8R0.H9U3j8G7j6K5L4M3N2O1P0Q9R8S7T6", "Content-Type": "application/json"}
+HEADERS = {
+    "X-Master-Key": "$2b$10$f06u9Lp29R09/X.Y8K8R0.H9U3j8G7j6K5L4M3N2O1P0Q9R8S7T6",
+    "Content-Type": "application/json"
+}
 
 st.title("📝 Preparar Entregas do Dia")
 
