@@ -22,7 +22,7 @@ if st.button("🚀 Gerar e Salvar Nova Lista"):
             id_entrega = str(i + 1).zfill(2)
             novas_entregas.append({"id": id_entrega, "cliente": cliente, "status": "Pendente"})
         
-        # Envia para o banco de dados
+        # Envia para o banco de dados com a permissão de sobrescrever
         response = requests.put(DB_URL, json={"entregas": novas_entregas}, headers=HEADERS)
         
         if response.status_code == 200:
