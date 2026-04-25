@@ -27,15 +27,25 @@ except:
 if not entregas:
     st.warning("Nenhuma entrega cadastrada para hoje.")
 
-# Cria os botões para cada entrega da sua lista
-for entrega in entregas:
+# ... (mantenha o início igual ao da image_e0aa35.png)
+
+# 1. Função para enviar a atualização para o banco
+def confirmar_no_banco(lista_atualizada):
+    requests.put(DB_URL, json={"entregas": lista_atualizada}, headers=HEADERS)
+
+# 2. Lógica dos botões
+for i, entrega in enumerate(entregas):
     col_nome, col_btn = st.columns([3, 2])
     with col_nome:
-        st.write(f"**Entrega #{entrega['id']}:** {entrega['cliente']}")
+        status_atual = entrega.get('status', 'Pendente')
+        st.write(f"**Entrega #{entrega['id']}:** {entrega['cliente']} ({status_atual})")
     
     with col_btn:
-        # Se clicar, a gente atualiza o status no banco
-        if st.button(f"Confirmar #{entrega['id']}", key=f"btn_{entrega['id']}"):
-            # Aqui você pode adicionar a lógica para mudar para 'Entregue'
-            st.success(f"Entrega {entrega['id']} confirmada!")
+        # Só mostra o botão se ainda não foi entregue
+        if status_atual == "Pendente":
+            if st.button(f"Confirmar #{entrega['id']}", key=f"btn_{i}"):
+                entregas[i]['status'] = "Entregue"  # Muda o status na lista
+                confirmar_no_banco(entregas)        # Salva no JSONBin
+                st.success("Enviado ao painel!")
+                st.rerun()
             st.balloons()
