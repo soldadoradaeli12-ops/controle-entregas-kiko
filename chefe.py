@@ -19,48 +19,44 @@ if not st.session_state.autenticado:
             st.error("Senha incorreta!")
     st.stop()
 
-# --- TÍTULO E CONFIGURAÇÃO ---
-st.title("📊 Monitoramento de Frota - Iveco VUC")
-
-# URL e Headers do seu JSONBin
+# --- CONFIGURAÇÃO DO BANCO ---
 DB_URL = "https://api.jsonbin.io/v3/b/69ece496856a68218970575d"
 HEADERS = {"X-Master-Key": "$2a$10$MUfpq2SfAKHcsLfMGJAigO.ieesITCNCewVMEfvXJf7B.S3a0ivaC"}
 
 def buscar_dados():
     try:
-        # Forçamos o request sem cache para garantir dados novos
+        # O segredo: buscar sem cache para vir dado novo na hora
         response = requests.get(DB_URL, headers=HEADERS)
         return response.json().get("record", {}).get("entregas", [])
     except:
         return []
 
-# --- BOTÃO DE ATUALIZAÇÃO MANUAL ---
-# Colocamos o botão ANTES de buscar os dados. O rerun fará o script recomeçar e buscar os dados novos.
-if st.button("🔄 Atualizar Agora"):
+st.title("📊 Monitoramento de Frota - Iveco VUC")
+
+# --- BOTÃO MANUAL (AGORA FUNCIONA NA HORA) ---
+if st.button("🔄 Atualizar Dados Agora"):
     st.rerun()
 
-# --- CARREGAMENTO DOS DADOS ---
+# --- BUSCA DOS DADOS ---
 entregas = buscar_dados()
 
 if entregas:
-    # Filtro corrigido para os novos status com emojis
+    # CORREÇÃO AQUI: Agora ele procura o emoji verde 🟢
     concluidas = [e for e in entregas if "🟢" in str(e.get("status", ""))]
     
     total = len(entregas)
-    quantidade_concluidas = len(concluidas)
+    qtd_concluidas = len(concluidas)
     
-    progresso = quantidade_concluidas / total
-    st.write(f"### Progresso das Entregas: {quantidade_concluidas} / {total}")
-    st.progress(progresso)
+    st.write(f"### Progresso: {qtd_concluidas} / {total}")
+    st.progress(qtd_concluidas / total)
     
-    st.write("### Detalhes do Status")
+    st.write("### Tabela de Status")
     df = pd.DataFrame(entregas)
-    st.table(df)
+    st.table(df) # table é mais rápido que dataframe comum
 else:
-    st.warning("⚠️ Aguardando início das entregas ou banco de dados vazio.")
+    st.warning("⚠️ Banco de dados vazio ou erro de conexão.")
 
-# --- ATUALIZAÇÃO AUTOMÁTICA (JEITO CORRETO) ---
-# Colocamos a espera no final para não travar a visualização inicial
-st.info("⌛ Próxima atualização automática em 30 segundos...")
+# --- ATUALIZAÇÃO AUTOMÁTICA (NO FINAL PARA NÃO TRAVAR) ---
+st.info("⌛ O painel atualizará sozinho em 30 segundos...")
 time.sleep(30)
 st.rerun()
