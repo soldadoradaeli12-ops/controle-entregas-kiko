@@ -4,7 +4,7 @@ import requests
 st.set_page_config(page_title="Cadastro de Entregas", layout="centered")
 
 # Verifique se esse ID (67bd...) é o mesmo que aparece no seu JSONBin
-DB_URL = "https://api.jsonbin.io/v3/b/67bdc657ad19ca34f8115598"
+DB_URL = "https://api.jsonbin.io/v3/b/69ece496856a68218970575d"
 HEADERS = {
     "X-Master-Key": "$2b$10$f06u9Lp29R09/X.Y8K8R0.H9U3j8G7j6K5L4M3N2O1P0Q9R8S7T6",
     "Content-Type": "application/json"
