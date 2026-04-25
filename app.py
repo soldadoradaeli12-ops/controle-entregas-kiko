@@ -38,9 +38,12 @@ for i, entrega in enumerate(entregas):
         st.write(f"**Entrega #{entrega['id']}:** {entrega['cliente']} ({status_atual})")
     
     with col_btn:
-        if status_atual == "Pendente":
-            if st.button(f"Confirmar #{entrega['id']}", key=f"btn_{i}"):
-                entregas[i]['status'] = "Entregue"
-                confirmar_no_banco(entregas)
-                st.success("Enviado!")
-                st.rerun()
+            # Só mostra o botão se ainda não foi entregue
+            # Alteramos para reconhecer o emoji que vem do admin.py
+            if status_atual == "🔴 Pendente": 
+                if st.button(f"Confirmar #{entrega['id']}", key=f"btn_{i}"):
+                    # Aqui salvamos com o emoji verde para o chefe conseguir contar
+                    entregas[i]['status'] = "🟢 Entregue" 
+                    confirmar_no_banco(entregas)
+                    st.success("Enviado ao painel!")
+                    st.rerun()
