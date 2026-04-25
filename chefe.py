@@ -2,44 +2,62 @@ import streamlit as st
 import requests
 import pandas as pd
 
-URL_BASE = "https://entregas---motorista-kiko-default-rtdb.firebaseio.com/"
+st.set_page_config(page_title="Painel Chefe", layout="wide")
 
-st.set_page_config(page_title="Painel Chefe", page_icon="📊", layout="wide")
+# --- SISTEMA DE SENHA ---
+if "autenticado" not in st.session_state:
+    st.session_state.autenticado = False
+
+if not st.session_state.autenticado:
+    senha = st.text_input("Digite a senha para acessar o painel:", type="password")
+    if st.button("Entrar"):
+        if senha == st.secrets["senha_chefe"]:
+            st.session_state.autenticado = True
+            st.rerun()
+        else:
+            st.error("Senha incorreta!")
+    st.stop()
+# ------------------------
+
 st.title("📊 Monitoramento de Frota - Iveco VUC")
 
-# --- FUNÇÃO PARA LIMPAR O BANCO ---
-def limpar_entregas():
-    requests.delete(f"{URL_BASE}/entregas.json")
-    st.success("O dia foi zerado com sucesso!")
+# URL do seu banco de dados (o mesmo do app.py)
+DB_URL = "https://api.jsonbin.io/v3/b/67bdc657ad19ca34f8115598"
+HEADERS = {"X-Master-Key": "$2b$10$f06u9Lp29R09/X.Y8K8R0.H9U3j8G7j6K5L4M3N2O1P0Q9R8S7T6"}
 
-# Busca dados
-response = requests.get(f"{URL_BASE}/entregas.json")
-dados_fb = response.json()
+def buscar_dados():
+    response = requests.get(DB_URL, headers=HEADERS)
+    return response.json()["record"]["entregas"]
 
-if dados_fb:
-    lista = [{"ID": k, "Cliente": v['cliente'], "Status": v['status']} for k, v in dados_fb.items()]
-    df = pd.DataFrame(lista).sort_values("ID")
+def salvar_dados(entregas):
+    requests.put(DB_URL, json={"entregas": entregas}, headers=HEADERS)
+
+try:
+    entregas = buscar_dados()
+    concluidas = [e for e in entregas if e["status"] == "Entregue"]
     
-    total = 10 
-    concluidas = len(df[df["Status"] == "✅ Entregue"])
-    
-    st.metric("Progresso das Entregas", f"{concluidas} / {total}")
-    st.progress(concluidas / total)
-    
+    st.write(f"### Progresso das Entregas")
+    progresso = len(concluidas) / len(entregas)
+    st.progress(progresso)
+    st.subheader(f"{len(concluidas)} / {len(entregas)}")
+
     st.write("### Tabela de Status")
-    st.dataframe(df, use_container_width=True)
-else:
+    df = pd.DataFrame(concluidas)
+    if not df.empty:
+        st.table(df[["id", "cliente", "status"]])
+    else:
+        st.info("Nenhuma entrega concluída ainda.")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🔄 Atualizar Dados"):
+            st.rerun()
+    with col2:
+        if st.button("🗑️ LIMPAR DIA (Zerar Tudo)"):
+            for e in entregas: e["status"] = "Pendente"
+            salvar_dados(entregas)
+            st.success("Dados resetados!")
+            st.rerun()
+
+except:
     st.info("Aguardando início das entregas... (Banco Vazio)")
-
-# --- BOTÕES DE CONTROLE ---
-st.divider() # Cria uma linha divisória
-col_att, col_limpar = st.columns(2)
-
-with col_att:
-    if st.button("🔄 Atualizar Dados"):
-        st.rerun()
-
-with col_limpar:
-    if st.button("🗑️ LIMPAR DIA (Zerar Tudo)"):
-        limpar_entregas()
-        st.rerun()
