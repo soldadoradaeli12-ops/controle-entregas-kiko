@@ -5,7 +5,7 @@ st.set_page_config(page_title="Cadastro de Entregas", layout="centered")
 
 DB_URL = "https://api.jsonbin.io/v3/b/69ed0a51856a68218970e577"
 HEADERS = {
-    "X-Master-Key": "$2a$10$MUfpq2SfAKHcsLfMGJAigO.ieesITCNCewVMEfvXJf7B.S3a0ivaC",
+    "X-Master-Key": "$2a$10$BGSSpcMjRoTr4mY4HBAK8.3UVE05u4mo.yp7BPz8CUE8dfT.nlILK",
     "Content-Type": "application/json"
 }
 
