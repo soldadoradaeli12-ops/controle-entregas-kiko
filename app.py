@@ -4,7 +4,7 @@ import requests
 st.set_page_config(page_title="App Motorista - VUC", page_icon="🚚")
 
 # Use EXATAMENTE o mesmo ID e Chave que deu certo no seu Admin
-DB_URL = "https://api.jsonbin.io/v3/b/COLE_AQUI_O_ID_QUE_DEU_CERTO"
+DB_URL = "https://api.jsonbin.io/v3/b/69ece496856a68218970575d"
 HEADERS = {
     "X-Master-Key": "$2a$10$MUfpq2SfAKHcSLfMGJAigO.ieesITCNCewVMEfvXJf7B.S3a0ivaC",
     "X-Bin-Meta": "false"
