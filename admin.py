@@ -16,7 +16,8 @@ lista_bruta = st.text_area("Lista de Clientes/Locais:", height=200)
 if st.button("🚀 Gerar e Salvar Nova Lista"):
     if lista_bruta:
         linhas = [linha.strip() for linha in lista_bruta.split('\n') if linha.strip()]
-        novas_entregas = [{"id": str(i+1).zfill(2), "cliente": c, "status": "Pendente"} for i, c in enumerate(linhas)]
+       # Como deve ficar a linha 20 do admin.py:
+        novas_entregas = [{"id": str(i+1).zfill(2), "cliente": c, "status": "🔴 Pendente"} for i, c in enumerate(linhas)]
         
         try:
             response = requests.put(DB_URL, json={"entregas": novas_entregas}, headers=HEADERS)
