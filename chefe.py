@@ -27,7 +27,7 @@ HEADERS = {"X-Master-Key": "$2a$10$MUfpq2SfAKHcSLfMGJAigO.ieesITCNCewVMEfvXJf7B.
 
 def buscar_dados():
     response = requests.get(DB_URL, headers=HEADERS)
-    return response.json()["record"]["entregas"]
+    return response.json()["entregas"]
 
 def salvar_dados(entregas):
     requests.put(DB_URL, json={"entregas": entregas}, headers=HEADERS)
