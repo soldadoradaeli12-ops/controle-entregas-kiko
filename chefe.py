@@ -1,6 +1,13 @@
 import streamlit as st
 import requests
 import pandas as pd
+import time
+
+# Faz o painel recarregar sozinho a cada 30 segundos
+st.empty() 
+if st.sidebar.checkbox("Ativar Atualização Automática", value=True):
+    time.sleep(30)
+    st.rerun()
 
 st.set_page_config(page_title="Painel Chefe", layout="wide")
 
