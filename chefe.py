@@ -36,14 +36,16 @@ if st.button("🔄 Atualizar"):
 
 entregas = buscar_dados()
 
+# Trecho principal do chefe.py para contar as entregas
 if entregas:
-    # Conta os emojis 🟢 para o progresso
+    # Ele verifica se o emoji verde existe em qualquer parte do status
     concluidas = [e for e in entregas if "🟢" in str(e.get("status", ""))]
     total = len(entregas)
     
-    st.write(f"### Progresso: {len(concluidas)} / {total}")
+    st.metric("Progresso Total", f"{len(concluidas)} / {total}")
     st.progress(len(concluidas) / total if total > 0 else 0)
     
+    # Tabela com os dados reais
     st.table(pd.DataFrame(entregas))
 else:
     st.warning("Aguardando dados...")
