@@ -9,7 +9,7 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-st.title("📝 Preparar Entregas do Dia")
+st.title("📝 Entregas do Dia")
 
 lista_bruta = st.text_area("Lista de Clientes/Locais:", height=200)
 
