@@ -29,7 +29,7 @@ def buscar_dados():
     except:
         return []
 
-st.title("📊 Painel Iveco VUC")
+st.title("📊Entregas Motorista Kiko")
 
 if st.button("🔄 Atualizar"):
     st.rerun()
